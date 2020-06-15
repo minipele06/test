@@ -6,10 +6,17 @@ import requests
 import json
 import csv
 import pandas as pd
+import datetime
 
 load_dotenv()
 
+def to_usd(my_price):
+    return f"${my_price:,.2f}"
+
 API_KEY = os.getenv("ALPHAVANTAGE_API_KEY")
+
+time = datetime.datetime.now()
+today = time.strftime("%Y-%m-%d %I:%M %p")
 
 ticker_list = []
 
@@ -43,16 +50,26 @@ for x in reversed(ticker_list):
 #credit: https://stackoverflow.com/questions/45978295/saving-a-downloaded-csv-file-using-python
 
 for x in ticker_list:
+    csv_filepath = os.path.join((os.path.dirname(__file__)),"..", "data", f"{x}.csv")
+
+    prices_df = pd.read_csv(csv_filepath)
+    hundred_dma = to_usd(prices_df["close"].mean())
+    prices_dict = prices_df.to_dict("records")
+    day = prices_dict[0]["timestamp"]
+    close = to_usd(prices_dict[0]["close"])
+    high = to_usd(prices_dict[0]["high"])
+    low = to_usd(prices_dict[0]["low"])
+
     print("-------------------------")
     print(f"YOUR SELECTED SYMBOL: {x}")
     print("-------------------------")
     print("REQUESTING STOCK MARKET DATA...")
-    print("REQUEST AT: 2018-02-20 02:00pm")
+    print(f"REQUEST AT: {today}")
     print("-------------------------")
-    print("LATEST DAY: 2018-02-20")
-    print("LATEST CLOSE: $100,000.00")
-    print("RECENT HIGH: $101,000.00")
-    print("RECENT LOW: $99,000.00")
+    print(f"LATEST DAY: {day}")
+    print(f"LATEST CLOSE: {close}")
+    print(f"RECENT HIGH: {high}")
+    print(f"RECENT LOW: {low}")
     print("-------------------------")
     print("RECOMMENDATION: BUY!")
     print("RECOMMENDATION REASON: TODO")

@@ -4,22 +4,22 @@ from dotenv import load_dotenv
 import os
 import requests
 import json
-import csv
 import pandas as pd
 
 load_dotenv()
 
 print(os.getenv("ALPHAVANTAGE_API_KEY"))
 
-url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=MSFT&apikey=demo&datatype=csv'
-response = requests.get(url)        
+request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo&datatype=csv"
+response = requests.get(request_url)
+# response_data = json.loads(response.text)
+# print(response_data["Time Series (5min)"]["2020-06-12 16:00:00"])
 
-with open('data/MSFT.csv', 'w') as f:
-    writer = csv.writer(f)
-    for line in response.iter_lines():
-        writer.writerow(line.decode('utf-8').split(','))
+print(response.text)
 
-#credit: https://stackoverflow.com/questions/45978295/saving-a-downloaded-csv-file-using-python
+df = pd.read_csv(request_url)   
+
+df.to_csv("data/IBM.csv")
 
 ticker_list = []
 

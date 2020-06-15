@@ -3,7 +3,6 @@
 from dotenv import load_dotenv
 import os
 import requests
-import json
 import csv
 import pandas as pd
 import datetime
@@ -49,11 +48,16 @@ for x in reversed(ticker_list):
 
 #credit: https://stackoverflow.com/questions/45978295/saving-a-downloaded-csv-file-using-python
 
+stock_number = len(ticker_list)
+count = 0
+
 for x in ticker_list:
+    count += 1
     csv_filepath = os.path.join((os.path.dirname(__file__)),"..", "data", f"{x}.csv")
 
     prices_df = pd.read_csv(csv_filepath)
     hundred_dma = to_usd(prices_df["close"].mean())
+    fifty_dma = to_usd(prices_df["close"].head(50).mean())
     prices_dict = prices_df.to_dict("records")
     day = prices_dict[0]["timestamp"]
     close = to_usd(prices_dict[0]["close"])
@@ -70,9 +74,24 @@ for x in ticker_list:
     print(f"LATEST CLOSE: {close}")
     print(f"RECENT HIGH: {high}")
     print(f"RECENT LOW: {low}")
+    print(hundred_dma)
+    print(fifty_dma)
     print("-------------------------")
-    print("RECOMMENDATION: BUY!")
-    print("RECOMMENDATION REASON: TODO")
-    print("-------------------------")
-    print("HAPPY INVESTING!")
-    print("-------------------------")
+
+    if close > hundred_dma and close > fifty_dma:
+        print("RECOMMENDATION: STRONG BUY!")
+        print("RECOMMENDATION REASON: Stock price is above the 50-DMA & 100-DMA")
+    elif close > fifty_dma:
+        print("RECOMMENDATION: BUY!")
+        print("RECOMMENDATION REASON: Stock price is above the 50-DMA")
+    elif close < hundred_dma and close < fifty_dma:
+        print("RECOMMENDATION: STRONG SELL!")
+        print("RECOMMENDATION REASON: Stock price is below the 50-DMA & 100-DMA")
+    elif close < fifty_dma:
+        print("RECOMMENDATION: SELL!")
+        print("RECOMMENDATION REASON: Stock price is below the 50-DMA")
+
+    if count == stock_number:
+        print("-------------------------")
+        print("HAPPY INVESTING!")
+        print("-------------------------")

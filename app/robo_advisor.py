@@ -74,8 +74,6 @@ for x in ticker_list:
     print(f"LATEST CLOSE: {close}")
     print(f"RECENT HIGH: {high}")
     print(f"RECENT LOW: {low}")
-    print(hundred_dma)
-    print(fifty_dma)
     print("-------------------------")
 
     if close > hundred_dma and close > fifty_dma:

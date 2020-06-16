@@ -26,7 +26,7 @@ Create and activate a new Anaconda virtual environment:
 
 >conda activate stocks-env
 
-From within the virtual environment, install the required packages specified in the "requirements.txt" file you created:
+From within the virtual environment, install the required packages specified in the "requirements.txt" file:
 
 >pip install -r requirements.txt
 
